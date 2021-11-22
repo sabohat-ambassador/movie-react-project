@@ -7,7 +7,7 @@ const ActorCard = (props) => {
     <div className='Card' >
       <div>
 
-  {props.actor.profile_path ? <img className='photoActor' src={Imageurl + props.actor.profile_path} alt="actor image" /> : <div className='poster'>NO IMAGE</div> } 
+  {props.actor.profile_path ? <img className='photoActor' src={Imageurl + props.actor.profile_path} alt="actor" /> : <div className='poster'>NO IMAGE</div> } 
       </div>
   
   <div className='names'>

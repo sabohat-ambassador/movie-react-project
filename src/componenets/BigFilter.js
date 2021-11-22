@@ -3,10 +3,11 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import Select from 'react-select';
 import Movie from './Movie';
-import { Link } from "react-router-dom";
+import apiCalls from '../config/api';
+
 
 import { useEffect } from "react/cjs/react.development";
-import {MY_API_KEY} from '../global'
+
 
 
 const Card = styled.div `
@@ -21,42 +22,6 @@ const Title = styled.span `
   font-size: 24px;
   font-weight: 700;
   color: #FFF;
-`;
-
-const NameInput = styled.input `
-  width: 100%;
-  padding: 7px 0 7px 10px;
-  margin-top: 15px;
-`;
-
-const Selectt = styled.select `
-  width: 145px;
-  margin: 10px 10px 0 0;
-  cursor: pointer;
-`;
-
-const Country = styled.span `
-   position: relative;
-   display: inline-block;
-   width: 145px;
-   margin: 10px 0 0;
-   vertical-align: top;
-   cursor: pointer;
-`;
-
-const Box = styled.span `
-  position: relative;
-  display: inline-block;
-  margin-top: 10px;
-`;
-
-const InSearch = styled.input `
-  width: 100%;
-  padding: 3px 5px;
-`;
-
-const Genre = styled.select `
-  cursor: pointer;
 `;
 
 const Btn = styled.button `
@@ -76,17 +41,7 @@ const Label = styled.span `
   color: #FFF;
 `;
 
-const Found = styled.span `
-  display: inline-block;
-  width: 145px;
-  height: 42px;
-  padding: 10px;
-  border-radius: 5px;
-  margin: 10px 0 0;
-  background-color: #FF1151;
-  font-size: 15px;
-  color: #FFF;
-`;
+ 
 
 const BigFilter = () => {
 
@@ -133,11 +88,22 @@ const BigFilter = () => {
 
 
   const [genresList, setGenresLIst] = useState([])
+  const [error, setError] = useState('')
     useEffect(() => {
-        fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${MY_API_KEY}`).then(res => res.json())
-          .then(data => {
+      const genres = async () => {
+        try {
+            const data = await apiCalls.genres();
+            console.log(data)
             setGenresLIst(data.genres);
-          });
+      
+        } catch (error) {
+            setError(error.message);
+        }
+       
+      }
+      genres();
+
+      
       },[]);
   
 
@@ -170,14 +136,28 @@ const BigFilter = () => {
 
 
   const [discover, setDiscover] = useState([])
-  const handleDiscover = () =>{
+
+  const handleDiscover = async () =>{
   
-      fetch(`https://api.themoviedb.org/3/discover/movie?api_key=${MY_API_KEY}&language=en-US&sort_by=${sort}&include_adult=false&page=1&year=${year}&with_genres=${genre}`).then(res => res.json())
-        .then(data => {
-          setDiscover(data.results);
-          console.log(data)
-        });
-    }
+    try {
+      const data = await apiCalls.discover({
+        language: "en-US",
+        include_adult: false,
+        with_genres: genre,
+        sort_by: sort,
+        page: 1,
+        year: year
+      });
+      console.log(data);
+      setDiscover(data.results);
+      
+  } catch (error) {
+      setError(error.message);
+  }
+}
+    
+    
+    
     
       const mappedDiscover =  discover.map( el => ( <Movie key={el.id} movieObj={el} /> ))
       
@@ -201,6 +181,7 @@ const BigFilter = () => {
 
    {mappedDiscover}
       </div>
+      {error && <div>{error}</div>}
    </Card>
   
   );

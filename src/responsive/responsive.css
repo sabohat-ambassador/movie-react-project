@@ -1,0 +1,81 @@
+
+
+
+@media(max-width: 1199px){
+  
+    .navbar {
+        margin-left: 40px;
+    }
+.container{
+    padding: 20px 50px;
+}
+}  
+
+@media(max-width: 991px){
+    .movieName{
+        margin-top: 30px;
+    }
+   
+}
+
+@media(max-width: 767px){
+    .viewImg{
+        width: 200px;
+        height: 250px;
+        border-radius: 10px;
+    }
+    .movieText{
+        margin-left: 270px;
+        max-width: 300px;
+    }
+    .movieName{
+        margin-left: 270px;
+        max-width: 300px;
+    }
+    .genresList{
+    display: block;
+    }
+    .photo{
+        width: 200px;
+        height: 250px;
+    }
+   
+    .card-title{
+        width: 200px;
+    }
+    .movie{
+        margin-bottom: 50px;
+    }
+    .movie::after{
+        width: 200px;
+        height: 250px;
+    }
+    .linkView{
+        text-align: inherit;
+        font-size: 10px;
+    }
+}
+
+@media(max-width: 565px){
+    .type-movies{
+        padding: 20px 30px;
+    }
+    .similarcard{
+        padding: 0 10px;
+    }
+    .movieText {
+        margin-top: 300px;
+        margin-left: 50px;
+        max-width: 500px;
+    }
+    .bgimage{
+        height: 700px;
+    }
+    .bgimage::after{
+        height: 700px;
+    }
+    .others{
+        margin-top: 100px;
+        color: white;
+    }
+}

@@ -1,70 +1,62 @@
 import { useEffect } from "react";
-import { useParams , Link} from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useState } from "react/cjs/react.development";
-import { MY_API_KEY } from "../global";
 import {ORIGINAL_IMAGE_URL} from '../global'
 import Actorcard from '../componenets/Actorcard'
 import Similarcard from '../componenets/Similarcard'
 import SwiperCore, { Autoplay } from 'swiper';
 import {Swiper, SwiperSlide} from 'swiper/react';
-
+import apiCalls from '../config/api';
 
 const Imageurl = 'https://image.tmdb.org/t/p/w500'
 
-const SINGLE_MOVIE_API = `https://api.themoviedb.org/3/movie/`;
-const API_PARAMS = `?api_key=${MY_API_KEY}&language=en-US`;
-const IMAGE_URL = "https://image.tmdb.org/t/p/w500";
+
 const ViewMovie = () => {
 
     const [movieInfo, setMovieInfo] = useState({});
     const [actorsList, setActorInfo] = useState([]);
     const [similar, setSimilar] = useState([])
-    const [error, setError] = useState([])
+    const [error, setError] = useState()
     const { id } = useParams();
 
     useEffect(() => {
-        console.log(id);
-        fetch(SINGLE_MOVIE_API + id + API_PARAMS).then( res => res.json()).then(data => {
-            setMovieInfo(data);
-        });
-        fetch(SINGLE_MOVIE_API + id +'/credits'+ API_PARAMS)
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("Serverda ma'lumot olishda xatolik!!");
-          }
-          return res.json();
-        })
-        .then((data) => {
-          setActorInfo(data.cast);
+      const detail = async () => {
+        try {
+          const data = await apiCalls.detail(id);
+          setMovieInfo(data);
           console.log(data)
-        })
-        fetch(SINGLE_MOVIE_API + id +'/similar'+ API_PARAMS)
-        .then((res) => {
-          if (!res.ok) {
-            throw Error("Serverda ma'lumot olishda xatolik!!");
+        } catch (error) {
+            setError(error.message);
+        };
+      };
+      detail();
+        const actorsAndCast = async () => {
+          try {
+              const data = await apiCalls.actorsAndCast(id);
+              setActorInfo(data.cast);
+              // console.log(data.results);
+          } catch (error) {
+              setError(error.message);
           }
-          return res.json();
-        })
-        .then((data) =>{
-          setSimilar(data.results);
-          console.log(data)
-        })
-        .catch((err) => {
-            console.log(err.message)
-            setError(err.message);
-        });
+         
+        }
+        actorsAndCast();
         
-    }, []);
+        const similar = async () => {
+          try {
+              const data = await apiCalls.similar(id);
+              setSimilar(data.results);
+              // console.log(data.results);
+          } catch (error) {
+              setError(error.message);
+          }
+         
+        }
+        similar();
+        
+    }, [id]);
 
-    // const mappedActors = actorsList.map((actor,index) => (
-    //     <Actorcard
-    //       // id={actor.id}
-    //       // name={actor.original_name}
-    //       // imgLink={IMAGE_URL + actor.profile_path}
-    //       // charName = {actor.character}
-    //       key={index} actor={actor}
-    //     />
-    // ))
+  
     const mappedSimilar = similar.map((similar,index) => (
       <Similarcard
         key={index} similar={similar}
@@ -80,7 +72,7 @@ const ViewMovie = () => {
         
         
         <div className='viewPage'>
-            <img className='viewImg' src={Imageurl + movieInfo.poster_path}/>
+            <img className='viewImg' src={Imageurl + movieInfo.poster_path} alt=''/>
             <h2 className='movieName'> {movieInfo.title}</h2>
             <p className='movieText'>{movieInfo.overview}</p>
             <div className='others'>
@@ -99,6 +91,20 @@ const ViewMovie = () => {
             disableOnInteraction: false,
             pauseOnMouseEnter: true
         }}
+        breakpoints={{
+          "992": {
+            "slidesPerView": 5,
+            "spaceBetween": 20
+          },"767": {
+            "slidesPerView": 3,
+            "spaceBetween": 20
+          },"566": {
+            "slidesPerView": 2,
+            "spaceBetween": 20
+          },"430": {
+            "slidesPerView": 2,
+            "spaceBetween": 20
+          }}}
       >
         {actorsList.map( el => ( <SwiperSlide key={el.id}> <Actorcard actor={el} /> </SwiperSlide>))}
        
@@ -108,7 +114,9 @@ const ViewMovie = () => {
         <div className='similarcard'>
          {mappedSimilar}
         </div>
+        {error && <div>{error}</div>}
         </div>
+     
     )
 }
 
