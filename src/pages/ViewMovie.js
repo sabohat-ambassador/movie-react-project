@@ -20,7 +20,7 @@ const ViewMovie = () => {
     const { id } = useParams();
 
     useEffect(() => {
-      export const detail = async () => {
+      const detail = async () => {
         try {
           const data = await apiCalls.detail(id);
           setMovieInfo(data);
