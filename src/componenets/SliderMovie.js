@@ -17,7 +17,7 @@ const Slider=()=>{
       const getMovies = async () => {
         try {
             const data = await apiCalls.getMovies('popular');
-            getMovies(data.results);
+            // getMovies(data.results);
             const arr = data.results.slice(0,4)
                 setSliderList(arr);
             console.log(data.results);

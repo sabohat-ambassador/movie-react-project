@@ -44,7 +44,8 @@ const MoviesGrid = (props) => {
   //     setMovies(list.concat(data.results));
   //     setTotalPage(data.total_pages);
   //   });
-  }, [props.genre, page, movies, prevGenre]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.genre, page]);
   
   return (
     <div className="col">
