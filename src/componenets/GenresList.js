@@ -1,7 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react/cjs/react.development";
+import { useState, useEffect } from "react";
 import apiCalls from "../config/api";
 
 const Genres=()=>{

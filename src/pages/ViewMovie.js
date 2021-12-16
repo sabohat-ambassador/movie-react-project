@@ -1,6 +1,5 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react/cjs/react.development";
 import {ORIGINAL_IMAGE_URL} from '../global'
 import Actorcard from '../componenets/Actorcard'
 import Similarcard from '../componenets/Similarcard'
